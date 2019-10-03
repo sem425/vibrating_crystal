@@ -20,9 +20,9 @@ const sketch = self => {
     let temp_VY_balls = [];
 
     let dT = 0.01;
-    let nu = 0.01;
-    let NRows = 10;
-    let NCols = 10;
+    let nu = 0.013;
+    let NRows = 20;
+    let NCols = 20;
     let Step = 10;
     let sound = [];
     
@@ -71,7 +71,7 @@ const sketch = self => {
 	
 	for (let step = 0; step < 100; step++) {
 	    T += 1;
-	    sound.push(X_balls[0][0]);
+	    sound.push(X_balls[0][0] + X_balls[10][10]);
 	    for (let row = 0; row < NRows; ++row) {
 		for (let col = 0; col < NCols; ++col) {
 		    let ax = 0.0;
