@@ -20,9 +20,9 @@ const sketch = self => {
     let temp_VY_balls = [];
 
     let dT = 0.01;
-    let nu = 0.01;
-    let NRows = 30;
-    let NCols = 30;
+    let nu = 0.00;
+    let NRows = 80;
+    let NCols = 80;
     let Step = 10;
 
     // self.mouseIsPressed
@@ -42,12 +42,12 @@ const sketch = self => {
 	    X_balls[row].push(1.2 * Step * col);
 	    Y_balls[row].push(1.2 * Step * row);
 	    if (row == 0) {
-		VY_balls[row].push(0.0);
+		VX_balls[row].push(0.0);
 	    } else {
-		VY_balls[row].push(0.0);
+		VX_balls[row].push(0.0);
 	    }
 
-	    VX_balls[row].push(0.0);
+	    VY_balls[row].push(0.0);
 
 	    temp_X_balls[row].push(Step * col);
 	    temp_Y_balls[row].push(Step * row);
@@ -64,12 +64,16 @@ const sketch = self => {
 	self.noStroke();
 	self.fill(255, 255, 0);
 
-	for (let step = 0; step < 50; step++) {
+	if(T > 800000) {
+	    nu = 0.04;
+	}
+	
+	for (let step = 0; step < 100; step++) {
 	    for (let row = 0; row < NRows; ++row) {
 		for (let col = 0; col < NCols; ++col) {
 		    let ax = 0.0;
 		    let ay = 0.0;
-
+		    
 		    for (let delta_row = -1; delta_row <= 1; delta_row++) {
 			for (let delta_col = -1; delta_col <= 1; delta_col++) {
 			    if (delta_row == 0 && delta_col == 0) {
@@ -113,6 +117,7 @@ const sketch = self => {
 		    temp_Y_balls[row][col] = Y_balls[row][col] + VY_balls[row][col] * dT;
 		    temp_VX_balls[row][col] = VX_balls[row][col] + ax * dT;
 		    temp_VY_balls[row][col] = VY_balls[row][col] + ay * dT;
+		    T += dT;
 		}
 	    }
 
@@ -129,14 +134,12 @@ const sketch = self => {
 
 	for (let row = 0; row < NRows; row++) {
 	    for (let col = 0; col < NCols; col++) {
-		self.ellipse(
-		    50 + X_balls[row][col] * 0.8,
-		    50 + Y_balls[row][col] * 0.8,
-		    3,
-		    3
-		);
+		self.ellipse(0 + X_balls[row][col] * 0.5, 0 + Y_balls[row][col] * 0.5, 2, 2);
 	    }
 	}
+	self.stroke(255);
+	self.fill(255,255,255);
+	self.text(T, 10, 20);
 	// self.stroke(255);
 	//self.line(X0, Y0 - 25, X0, Y0 + 25);
 	//self.line(X0 - 25, Y0, X0 + 25, Y0);
