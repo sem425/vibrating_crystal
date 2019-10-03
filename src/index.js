@@ -26,7 +26,6 @@ const sketch = self => {
     let Step = 10;
     let sound = [];
     
-    // self.mouseIsPressed
     // Заполним кристаллическую решетку
     for (let row = 0; row < NRows; row++) {
 	X_balls.push([]);
@@ -42,36 +41,23 @@ const sketch = self => {
 	for (let col = 0; col < NCols; col++) {
 	    X_balls[row].push(1.2 * Step * col);
 	    Y_balls[row].push(1.2 * Step * row);
-	    if (row == 0) {
-		VX_balls[row].push(0.0);
-	    } else {
-		VX_balls[row].push(0.0);
-	    }
-
+	    VX_balls[row].push(0.0);
 	    VY_balls[row].push(0.0);
 
-	    temp_X_balls[row].push(Step * col);
-	    temp_Y_balls[row].push(Step * row);
+	    temp_X_balls[row].push(0.0);
+	    temp_Y_balls[row].push(0.0);
 	    temp_VX_balls[row].push(0.0);
 	    temp_VY_balls[row].push(0.0);
 	}
     }
 
-    //VX_balls[0][0] = 5.0;
-    //VY_balls[0][0] = 5.0;
-
     self.draw = () => {
-	self.background(0, 0, 0);
-	self.noStroke();
-	self.fill(255, 255, 0);
-
 	if(self.mouseIsPressed) {
-	    self.saveJSON(sound, 'sound.json');
+	    self.saveJSON(sound, 'wave.json');
 	}
 	
-	for (let step = 0; step < 100; step++) {
-	    T += 1;
-	    sound.push(X_balls[0][0] + X_balls[10][10]);
+
+	for (let step = 0; step < 2000; step++) {
 	    for (let row = 0; row < NRows; ++row) {
 		for (let col = 0; col < NCols; ++col) {
 		    let ax = 0.0;
@@ -82,7 +68,7 @@ const sketch = self => {
 			    if (delta_row == 0 && delta_col == 0) {
 				continue;
 			    }
-
+			    
 			    let nb_row = row + delta_row;
 			    let nb_col = col + delta_col;
 			    if (
@@ -93,37 +79,36 @@ const sketch = self => {
 			    ) {
 				continue;
 			    }
-
+			    
 			    let x0 = X_balls[row][col];
 			    let y0 = Y_balls[row][col];
 			    let x1 = X_balls[nb_row][nb_col];
 			    let y1 = Y_balls[nb_row][nb_col];
-
+			    
 			    let s;
 			    if (delta_row == delta_col || delta_row == -delta_col) {
 				s = Math.sqrt(2) * Step;
 			    } else {
 				s = Step;
 			    }
-
+			    
 			    let l = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
-
+			    
 			    ax += k * (1 - s / l) * (x1 - x0);
 			    ay += k * (1 - s / l) * (y1 - y0);
 			}
 		    }
-
+		    
 		    ax += -nu * VX_balls[row][col];
 		    ay += -nu * VY_balls[row][col];
-
+		    
 		    temp_X_balls[row][col] = X_balls[row][col] + VX_balls[row][col] * dT;
 		    temp_Y_balls[row][col] = Y_balls[row][col] + VY_balls[row][col] * dT;
 		    temp_VX_balls[row][col] = VX_balls[row][col] + ax * dT;
 		    temp_VY_balls[row][col] = VY_balls[row][col] + ay * dT;
-		    T += dT;
 		}
 	    }
-
+	    
 	    // UPDATE
 	    for (let row = 0; row < NRows; row++) {
 		for (let col = 0; col < NCols; col++) {
@@ -133,7 +118,12 @@ const sketch = self => {
 		    VY_balls[row][col] = temp_VY_balls[row][col];
 		}
 	    }
+	
+	    sound.push(X_balls[0][0] + X_balls[10][10]);
+	    T += 1;
 	}
+	
+	self.background(0, 0, 0);
 
 	// for (let row = 0; row < NRows; row++) {
 	//     for (let col = 0; col < NCols; col++) {
@@ -143,10 +133,7 @@ const sketch = self => {
 	self.stroke(255);
 	self.fill(255,255,255);
 	self.text(T, 10, 20);
-	// self.stroke(255);
-	//self.line(X0, Y0 - 25, X0, Y0 + 25);
-	//self.line(X0 - 25, Y0, X0 + 25, Y0);
-    };
+    }    
 };
 
 const P5 = new p5(sketch);
