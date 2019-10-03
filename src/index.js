@@ -2,7 +2,7 @@ import p5 from "p5";
 
 const sketch = self => {
     self.setup = () => {
-	self.createCanvas(600, 600);
+	self.createCanvas(100, 100);
 	self.noStroke();
 	self.fill(255, 255, 0);
     };
@@ -20,11 +20,12 @@ const sketch = self => {
     let temp_VY_balls = [];
 
     let dT = 0.01;
-    let nu = 0.00;
-    let NRows = 80;
-    let NCols = 80;
+    let nu = 0.01;
+    let NRows = 10;
+    let NCols = 10;
     let Step = 10;
-
+    let sound = [];
+    
     // self.mouseIsPressed
     // Заполним кристаллическую решетку
     for (let row = 0; row < NRows; row++) {
@@ -64,11 +65,13 @@ const sketch = self => {
 	self.noStroke();
 	self.fill(255, 255, 0);
 
-	if(T > 800000) {
-	    nu = 0.04;
+	if(self.mouseIsPressed) {
+	    self.saveJSON(sound, 'sound.json');
 	}
 	
 	for (let step = 0; step < 100; step++) {
+	    T += 1;
+	    sound.push(X_balls[0][0]);
 	    for (let row = 0; row < NRows; ++row) {
 		for (let col = 0; col < NCols; ++col) {
 		    let ax = 0.0;
@@ -132,11 +135,11 @@ const sketch = self => {
 	    }
 	}
 
-	for (let row = 0; row < NRows; row++) {
-	    for (let col = 0; col < NCols; col++) {
-		self.ellipse(0 + X_balls[row][col] * 0.5, 0 + Y_balls[row][col] * 0.5, 2, 2);
-	    }
-	}
+	// for (let row = 0; row < NRows; row++) {
+	//     for (let col = 0; col < NCols; col++) {
+	// 	self.ellipse(0 + X_balls[row][col] * 0.5, 0 + Y_balls[row][col] * 0.5, 2, 2);
+	//     }
+	// }
 	self.stroke(255);
 	self.fill(255,255,255);
 	self.text(T, 10, 20);
